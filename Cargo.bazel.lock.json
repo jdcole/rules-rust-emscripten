@@ -1,0 +1,34 @@
+{
+  "checksum": "acae17506c03fc199f37e7720aaca9af578c89e1c08601d835dad53d6d875d95",
+  "crates": {
+    "hello 0.1.0": {
+      "name": "hello",
+      "version": "0.1.0",
+      "package_url": null,
+      "repository": null,
+      "targets": [],
+      "library_target_name": null,
+      "common_attrs": {
+        "compile_data_glob": [
+          "**"
+        ],
+        "edition": "2018",
+        "version": "0.1.0"
+      },
+      "license": null,
+      "license_ids": [],
+      "license_file": null
+    }
+  },
+  "binary_crates": [],
+  "workspace_members": {
+    "hello 0.1.0": ""
+  },
+  "conditions": {
+    "wasm32-unknown-emscripten": [
+      "wasm32-unknown-emscripten"
+    ]
+  },
+  "direct_deps": [],
+  "direct_dev_deps": []
+}

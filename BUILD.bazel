@@ -1,0 +1,46 @@
+load("@rules_rust//rust:defs.bzl", "rust_binary", "rust_static_library")
+load("@crate_index//:defs.bzl", "all_crate_deps")
+
+load("@aspect_bazel_lib//lib:transitions.bzl", "platform_transition_binary")
+
+# static lib doesn't work with wasm compiler - maybe wasm32-unk-unk
+# rust_static_library(
+rust_binary(
+    name = "hello",
+
+    srcs = glob([
+        "src/**/*.rs",
+    ]),
+
+    deps = [
+    ] + all_crate_deps(),
+
+    platform = ":wasm",
+    toolchains = [
+        "@emcc_toolchain__wasm32-unknown-emscripten__nightly_tools//:rust_toolchain",
+    ],
+)
+
+cc_binary(
+    name = "cc_hello",
+
+    srcs = [
+        "hello.cc",
+    ],
+)
+
+platform(
+    name = "wasm",
+
+    constraint_values = [
+        "@platforms//cpu:wasm32",
+        "@platforms//os:none",
+    ],
+)
+
+platform_transition_binary(
+    name = "hello-wasm",
+
+    binary = ":hello",
+    target_platform = ":wasm",
+)

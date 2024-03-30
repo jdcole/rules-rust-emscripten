@@ -1,0 +1,68 @@
+load(
+    "@rules_rust//rust:repositories.bzl",
+    
+    "rules_rust_dependencies",
+    "rust_register_toolchains",
+    "rust_repository_set",
+)
+
+rules_rust_dependencies()
+
+rust_repository_set(
+    name = "emcc_toolchain",
+
+    edition = "2018",
+    exec_triple = "aarch64-apple-darwin",
+    extra_target_triples = {
+        "wasm32-unknown-emscripten": [
+            "@platforms//cpu:wasm32",
+            "@platforms//os:none",
+        ],
+    },
+    default_target_compatible_with = [
+            "@platforms//cpu:wasm32",
+            "@platforms//os:none",
+        ],
+    
+    versions = [
+        "nightly/2024-02-07",
+    ],
+)
+
+rust_register_toolchains(
+    edition = "2018",
+    register_toolchains = False,
+)
+
+load(
+    "@rules_rust//crate_universe:repositories.bzl",
+
+    "crate_universe_dependencies",
+)
+crate_universe_dependencies()
+
+load("@rules_rust//crate_universe:defs.bzl",
+     "crate",
+     "crates_repository",
+)
+
+# REMEMBER: CARGO_BAZEL_REPIN=1 bazel sync --only=crate_index
+crates_repository(
+    name = "crate_index",
+
+    cargo_lockfile = "//:Cargo.lock",
+    lockfile = "//:Cargo.bazel.lock.json",
+    manifests = [
+    	"//:Cargo.toml",
+    ],
+    supported_platform_triples = [
+        "wasm32-unknown-emscripten",
+    ],
+)
+
+load(
+    "@crate_index//:defs.bzl",
+    crate_index_repos = "crate_repositories",
+)
+
+crate_index_repos()
